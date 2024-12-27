@@ -95,7 +95,18 @@ def save_to_styled_excel(data, output_file):
 
 # Main function
 def main():
-    tickers = ["TSLA", "AAPL", "MSFT", "AMZN", "GOOGL"]
+    tickers = [
+    "TSLA", "AAPL", "MSFT", "AMZN", "GOOGL", "META", "NVDA", "BRK-B", "V", "JPM",
+    "JNJ", "WMT", "PG", "XOM", "UNH", "HD", "MA", "PFE", "CVX", "KO",
+    "DIS", "PEP", "BAC", "CSCO", "NFLX", "ADBE", "CMCSA", "ABT", "INTC", "PYPL",
+    "T", "MRK", "ORCL", "NKE", "LLY", "IBM", "CRM", "ACN", "MDT", "DHR",
+    "BMY", "VZ", "MCD", "ABBV", "NEE", "COST", "TXN", "PM", "UNP", "UPS",
+    "LOW", "HON", "RTX", "SBUX", "SPGI", "MS", "INTU", "QCOM", "CAT", "AXP",
+    "AMGN", "LIN", "ZTS", "BLK", "TMO", "GILD", "CVS", "BA", "DE", "PLD",
+    "NOW", "MMM", "ADP", "C", "BKNG", "ISRG", "REGN", "EL", "VRTX", "MO",
+    "LRCX", "F", "GM", "TWTR", "SNPS", "ADI", "SYK", "EW", "ETN", "PGR",
+    "WBA", "CL", "BSX", "DG", "HUM", "TGT", "APD", "CI", "GD", "FDX"
+    ]
     output_file = "Stock_Analysis.xlsx"
 
     # Fetch data for each ticker
