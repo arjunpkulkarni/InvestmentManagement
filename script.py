@@ -3,6 +3,7 @@ import yfinance as yf
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, PatternFill
 from openpyxl.utils.dataframe import dataframe_to_rows
+from openpyxl.formatting.rule import CellIsRule
 
 # Thresholds for investment decision
 THRESHOLDS = {
@@ -67,7 +68,7 @@ def save_to_styled_excel(data, output_file):
     header_font = Font(bold=True, color="FFFFFF")
     fill = PatternFill("solid", fgColor="4F81BD")
     alignment = Alignment(horizontal="center", vertical="center")
-    
+
     for row in dataframe_to_rows(df, index=False, header=True):
         ws.append(row)
 
@@ -75,6 +76,34 @@ def save_to_styled_excel(data, output_file):
         cell.font = header_font
         cell.fill = fill
         cell.alignment = alignment
+
+    # Conditional formatting rules
+    green_fill = PatternFill(start_color="C6EFCE", end_color="C6EFCE", fill_type="solid")
+    red_fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
+
+    for col_idx, column_name in enumerate(df.columns, start=1):
+        if column_name in THRESHOLDS:
+            threshold = THRESHOLDS[column_name]
+            if column_name in ["P/E Ratio", "P/B Ratio", "Debt to Equity"]:
+                # Lower values are better
+                ws.conditional_formatting.add(
+                    f"{ws.cell(row=2, column=col_idx).coordinate}:{ws.cell(row=ws.max_row, column=col_idx).coordinate}",
+                    CellIsRule(operator="lessThanOrEqual", formula=[str(threshold)], fill=green_fill)
+                )
+                ws.conditional_formatting.add(
+                    f"{ws.cell(row=2, column=col_idx).coordinate}:{ws.cell(row=ws.max_row, column=col_idx).coordinate}",
+                    CellIsRule(operator="greaterThan", formula=[str(threshold)], fill=red_fill)
+                )
+            else:
+                # Higher values are better
+                ws.conditional_formatting.add(
+                    f"{ws.cell(row=2, column=col_idx).coordinate}:{ws.cell(row=ws.max_row, column=col_idx).coordinate}",
+                    CellIsRule(operator="greaterThanOrEqual", formula=[str(threshold)], fill=green_fill)
+                )
+                ws.conditional_formatting.add(
+                    f"{ws.cell(row=2, column=col_idx).coordinate}:{ws.cell(row=ws.max_row, column=col_idx).coordinate}",
+                    CellIsRule(operator="lessThan", formula=[str(threshold)], fill=red_fill)
+                )
 
     # Auto-size columns
     for column in ws.columns:
